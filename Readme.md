@@ -1,212 +1,849 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Productos</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-        }
-        .container {
-            width: 90%;
-            max-width: 400px;
-            margin: auto;
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        h3 {
-            color: #333;
-            font-size: 18px;
-        }
-        .producto {
-            cursor: pointer;
-            padding: 10px;
-            margin: 5px;
-            background: #007bff;
-            color: white;
-            display: block;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: 0.3s;
-            font-size: 16px;
-        }
-        .producto:hover {
-            background: #0056b3;
-        }
-        .lista {
-            background: #fff3cd;
-            color: #856404;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ffeeba;
-            min-height: 60px;
-            text-align: left;
-            font-size: 16px;
-            overflow-y: auto;
-            max-height: 150px;
-        }
-        .cantidad {
-            font-weight: bold;
-            color: #d9534f;
-        }
-        input {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-top: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        button {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 18px;
-            width: 100%;
-            margin-top: 10px;
-        }
-        button:hover {
-            background: #218838;
-        }
-        .mensaje-adicional {
-            font-size: 14px;
-            color: #555;
-            margin-top: 20px;
-            text-align: center;
-            font-weight: bold;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Canuto's Wings | App de Pedidos</title>
+  <style>
+    :root{
+      --bg:#0f0f10;
+      --card:#18181b;
+      --card-2:#202024;
+      --soft:#2c2c31;
+      --text:#f7f7f8;
+      --muted:#b7b7be;
+      --gold:#f5b942;
+      --green:#25D366;
+      --orange:#ff7a00;
+      --blue:#345dff;
+      --danger:#ff7b7b;
+      --shadow:0 12px 30px rgba(0,0,0,.28);
+      --radius:22px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(245,185,66,.08), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(255,122,0,.09), transparent 20%),
+        linear-gradient(180deg,#111 0%, #191919 100%);
+      color:var(--text);
+    }
+
+    .app{
+      width:min(100%, 900px);
+      margin:0 auto;
+      padding:14px 10px 120px;
+    }
+
+    .hero{
+      background:
+        radial-gradient(circle at top right, rgba(245,185,66,.18), transparent 30%),
+        radial-gradient(circle at top left, rgba(255,122,0,.16), transparent 28%),
+        linear-gradient(145deg, #1f1f24, #111216);
+      border:1px solid rgba(255,255,255,.05);
+      border-radius:30px;
+      padding:22px 18px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .badge{
+      display:inline-block;
+      background:rgba(245,185,66,.14);
+      border:1px solid rgba(245,185,66,.35);
+      color:#ffd57d;
+      font-size:12px;
+      font-weight:700;
+      padding:7px 12px;
+      border-radius:999px;
+      letter-spacing:.3px;
+      margin-bottom:10px;
+    }
+
+    h1{margin:0;font-size:27px;line-height:1.08;}
+    .sub{color:var(--muted);margin:10px 0 0;font-size:15px;line-height:1.45;}
+    .hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;align-items:center;margin-top:14px;}
+    .hero-card{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:20px;
+      padding:14px;
+    }
+    .price-highlight{font-size:14px;color:#ffe8aa;margin-top:8px;}
+    .stack{display:grid;gap:14px;margin-top:16px;}
+    .section-title{margin:8px 2px 2px;font-size:20px;font-weight:800;}
+    .section-sub{color:var(--muted);margin:0 2px 8px;font-size:14px;line-height:1.45;}
+    .products,.flavor-orders{display:grid;gap:14px;}
+
+    .card{
+      background:linear-gradient(180deg, var(--card), var(--card-2));
+      border:1px solid rgba(255,255,255,.05);
+      border-radius:var(--radius);
+      padding:16px;
+      box-shadow:var(--shadow);
+    }
+
+    .product-top,.summary-line,.summary-top,.mix-row{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-start;
+    }
+
+    .product-name{font-size:20px;font-weight:800;margin:0;}
+    .product-desc{color:var(--muted);font-size:14px;margin:6px 0 0;line-height:1.4;}
+    .price{min-width:80px;text-align:right;font-size:28px;font-weight:900;color:var(--gold);}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+    .chip{
+      background:#2a2a30;
+      color:#ececf0;
+      border:1px solid rgba(255,255,255,.06);
+      padding:7px 10px;
+      font-size:12px;
+      border-radius:999px;
+    }
+
+    .controls{
+      display:grid;
+      grid-template-columns:auto 1fr auto;
+      gap:10px;
+      align-items:center;
+      margin-top:14px;
+    }
+
+    .qty-box{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      background:#111;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:14px;
+      padding:6px;
+      width:fit-content;
+    }
+
+    button{
+      border:none;
+      cursor:pointer;
+      font-weight:700;
+      transition:.18s transform ease, .18s opacity ease, .18s background ease;
+    }
+    button:active{transform:scale(.98)}
+
+    .qty-btn{
+      width:36px;height:36px;border-radius:10px;
+      background:var(--soft);color:white;font-size:20px;
+    }
+    .qty-num{width:30px;text-align:center;font-size:18px;font-weight:800;}
+
+    .add-btn{
+      background:linear-gradient(135deg, var(--orange), #ff5400);
+      color:white;padding:13px 14px;border-radius:14px;font-size:15px;min-width:140px;
+    }
+    .add-btn.secondary{
+      background:linear-gradient(135deg, var(--blue), #1e42cb);
+    }
+
+    .muted{color:var(--muted);font-size:13px;}
+
+    .field{display:grid;gap:7px;}
+    .field label{font-size:13px;color:#ddd;font-weight:700;}
+    .field input,.field textarea,.field select{
+      width:100%;
+      background:#111216;color:#fff;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:14px;padding:13px 14px;font-size:15px;outline:none;
+    }
+    .field textarea{min-height:90px;resize:vertical}
+    .customer-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+    .summary{
+      position:sticky;
+      bottom:0;
+      z-index:50;
+      margin-top:18px;
+      background:rgba(15,15,17,.97);
+      backdrop-filter: blur(10px);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px 18px 0 0;
+      padding:12px;
+      box-shadow:var(--shadow);
+      transition:transform .18s ease;
+    }
+
+    .summary-items{display:grid;gap:8px;margin:10px 0 12px;max-height:260px;overflow:auto;}
+    .summary-item{
+      background:#16171b;border:1px solid rgba(255,255,255,.05);
+      border-radius:16px;padding:10px 12px;display:grid;gap:6px;
+    }
+
+    .remove-btn{
+      background:none;color:var(--danger);padding:0;font-size:13px;text-align:left;
+    }
+
+    .totals{
+      display:grid;gap:6px;border-top:1px solid rgba(255,255,255,.08);
+      padding-top:10px;margin-top:6px;
+    }
+    .total-row{display:flex;justify-content:space-between;gap:12px;font-size:14px;}
+    .grand{font-size:22px;font-weight:900;color:var(--gold);}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
+
+    .primary{
+      background:linear-gradient(135deg, var(--green), #17984a);
+      color:#fff;padding:15px;border-radius:16px;font-size:16px;
+    }
+    .secondary-btn{
+      background:#292a2f;color:#fff;padding:15px;border-radius:16px;font-size:15px;
+    }
+
+    .flavor-order-card{
+      background:#141418;border:1px solid rgba(255,255,255,.06);
+      border-radius:18px;padding:14px;
+    }
+    .flavor-order-head{
+      display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px;
+    }
+    .pill{
+      background:#26262d;border:1px solid rgba(255,255,255,.06);
+      border-radius:999px;padding:6px 10px;font-size:12px;
+    }
+    .mode-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0;}
+    .mode-box{
+      background:#101115;border:1px solid rgba(255,255,255,.08);
+      border-radius:14px;padding:12px;display:flex;gap:10px;align-items:center;
+    }
+    .single-flavor-box,.mix-box{
+      margin-top:10px;padding:12px;background:#111216;
+      border:1px solid rgba(255,255,255,.08);border-radius:14px;
+    }
+    .mix-grid{display:grid;gap:10px;margin-top:10px;}
+    .mix-row{
+      align-items:center;background:#17181d;padding:10px 12px;
+      border-radius:12px;border:1px solid rgba(255,255,255,.06);
+    }
+    .mix-row select{max-width:110px;padding:10px 12px;}
+    .helper-good{font-size:12px;color:#9de3ac;margin-top:10px;}
+    .helper-warn{font-size:12px;color:#ffb3b3;margin-top:10px;}
+    .mini-total{font-size:13px;color:#ddd;}
+    .notice{margin-top:10px;font-size:12px;color:var(--muted);text-align:center;line-height:1.4;}
+
+    @media (max-width:700px){
+      .hero-grid,.customer-grid,.actions,.mode-options,.controls{grid-template-columns:1fr;}
+      .price{text-align:left;min-width:auto;font-size:26px;}
+      .product-top{flex-direction:column;}
+      h1{font-size:26px}
+      .sub{font-size:16px}
+      .add-btn,.primary,.secondary-btn{width:100%;font-size:17px;padding:16px;}
+      .qty-btn{width:44px;height:44px;font-size:22px;}
+      .qty-num{font-size:20px}
+      .field input,.field textarea,.field select{font-size:16px;padding:14px;}
+      .product-name{font-size:22px}
+      .section-title{font-size:22px}
+      .summary-items{max-height:200px}
+      .product-top,.summary-top,.mix-row{flex-direction:column;align-items:stretch;}
+    }
+  </style>
 </head>
 <body>
+  <div class="app">
+    <section class="hero">
+      <div class="badge">PEDIDOS RÁPIDOS POR WHATSAPP</div>
+      <h1>Canuto's Wings 🍗</h1>
+      <p class="sub">Arma tu pedido, selecciona sabores por cada orden y envíalo directo por WhatsApp al <b>251 500 4300</b>. Compatible con teléfono celular.</p>
+      <div class="hero-grid">
+        <div class="hero-card">
+          <b>🔥 Combo destacado</b>
+          <div class="price-highlight">1 orden de alitas + 1 papas + 1 refresco</div>
+          <div class="price-highlight"><b>$20</b></div>
+        </div>
+        <div class="hero-card">
+          <b>⏰ Horario</b>
+          <div class="price-highlight">Sábados desde las 5:00 PM</div>
+          <div class="price-highlight" id="todayText"></div>
+        </div>
+      </div>
+    </section>
 
-    <div class="container">
-        <h3>Selecciona los productos:</h3>
-        <div id="productos-container"></div>
+    <div class="stack">
+      <section class="card">
+        <div class="section-title">1. Elige tus productos</div>
+        <p class="section-sub">Primero agregas los productos. Después eliges sabores por cada orden que tenga alitas.</p>
 
-        <h3>Otros productos:</h3>
-        <input type="text" id="productoPersonalizado" placeholder="Escribe un producto y presiona Enter">
-        
-        <h3>Lista de selección:</h3>
-        <div class="lista" id="listaProductos">Se requiere:</div>
-        
-        <button onclick="copiarYEnviar()">Copiar y Enviar a WhatsApp</button>
+        <div class="products">
+          <article class="card" style="margin:0; background:#141418;">
+            <div class="product-top">
+              <div>
+                <h3 class="product-name">Combo con Papas</h3>
+                <p class="product-desc">1 orden de alitas, 1 orden de papas y 1 refresco. Este aparece primero para empujar más ventas.</p>
+              </div>
+              <div class="price">$20</div>
+            </div>
+            <div class="chips">
+              <span class="chip">6 alitas</span>
+              <span class="chip">1 papas</span>
+              <span class="chip">1 refresco</span>
+            </div>
+            <div class="controls">
+              <div class="qty-box">
+                <button class="qty-btn" onclick="changeQty('comboPapas', -1)">−</button>
+                <div class="qty-num" id="qty-comboPapas">1</div>
+                <button class="qty-btn" onclick="changeQty('comboPapas', 1)">+</button>
+              </div>
+              <div></div>
+              <button class="add-btn" onclick="addPreset('comboPapas')">Agregar</button>
+            </div>
+          </article>
 
-        <p class="mensaje-adicional">Si la persona a cargo no se encuentra disponible, copia el pedido para enviarlo a la persona asignada temporalmente. Gracias.</p>
-        <button onclick="copiarPedido()">Copiar pedido</button>
+          <article class="card" style="margin:0; background:#141418;">
+            <div class="product-top">
+              <div>
+                <h3 class="product-name">Orden clásica</h3>
+                <p class="product-desc">6 alitas con refresco incluido.</p>
+              </div>
+              <div class="price">$15</div>
+            </div>
+            <div class="chips">
+              <span class="chip">6 alitas</span>
+              <span class="chip">1 refresco</span>
+            </div>
+            <div class="controls">
+              <div class="qty-box">
+                <button class="qty-btn" onclick="changeQty('ordenClasica', -1)">−</button>
+                <div class="qty-num" id="qty-ordenClasica">1</div>
+                <button class="qty-btn" onclick="changeQty('ordenClasica', 1)">+</button>
+              </div>
+              <div></div>
+              <button class="add-btn" onclick="addPreset('ordenClasica')">Agregar</button>
+            </div>
+          </article>
+
+          <article class="card" style="margin:0; background:#141418;">
+            <div class="product-top">
+              <div>
+                <h3 class="product-name">Alitas individuales</h3>
+                <p class="product-desc">Cada alita cuesta $3. Elige cuántas quieres en la lista desplegable.</p>
+              </div>
+              <div class="price">$3</div>
+            </div>
+            <div class="chips">
+              <span class="chip">Precio por pieza</span>
+            </div>
+            <div class="controls">
+              <div class="field" style="max-width:160px; margin:0;">
+                <label for="individualCount" style="display:none;">Número de alitas</label>
+                <select id="individualCount">
+                  <option value="1">1 alita</option>
+                  <option value="2">2 alitas</option>
+                  <option value="3">3 alitas</option>
+                  <option value="4">4 alitas</option>
+                  <option value="5">5 alitas</option>
+                  <option value="6">6 alitas</option>
+                  <option value="7">7 alitas</option>
+                  <option value="8">8 alitas</option>
+                  <option value="9">9 alitas</option>
+                  <option value="10">10 alitas</option>
+                  <option value="11">11 alitas</option>
+                  <option value="12">12 alitas</option>
+                </select>
+              </div>
+              <div class="mini-total" id="individualPricePreview">Total: $3</div>
+              <button class="add-btn" onclick="addIndividual()">Agregar</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-title">2. Sabores por cada orden agregada</div>
+        <p class="section-sub">Aquí aparecen solo las órdenes que llevan alitas. Si eliges mixteadas, no te dejará pasarte del número de alitas disponible.</p>
+        <div class="flavor-orders" id="flavorOrdersContainer">
+          <div class="muted">Todavía no has agregado órdenes con alitas.</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-title">3. Extras y datos opcionales</div>
+        <p class="section-sub">Las papas y sodas extra ayudan a subir el ticket. Por ahora los datos del cliente son opcionales.</p>
+
+        <div class="products" style="margin-bottom:14px;">
+          <article class="card" style="margin:0; background:#141418;">
+            <div class="product-top">
+              <div>
+                <h3 class="product-name">Orden de papas</h3>
+                <p class="product-desc">Agrégala como extra para acompañar cualquier pedido.</p>
+              </div>
+              <div class="price">$6</div>
+            </div>
+            <div class="controls">
+              <div class="qty-box">
+                <button class="qty-btn" onclick="changeQty('papasExtra', -1)">−</button>
+                <div class="qty-num" id="qty-papasExtra">1</div>
+                <button class="qty-btn" onclick="changeQty('papasExtra', 1)">+</button>
+              </div>
+              <div></div>
+              <button class="add-btn secondary" onclick="addExtra('papasExtra')">Agregar</button>
+            </div>
+          </article>
+
+          <article class="card" style="margin:0; background:#141418;">
+            <div class="product-top">
+              <div>
+                <h3 class="product-name">Soda extra</h3>
+                <p class="product-desc">Ideal para completar pedidos grandes.</p>
+              </div>
+              <div class="price">$2</div>
+            </div>
+            <div class="controls">
+              <div class="qty-box">
+                <button class="qty-btn" onclick="changeQty('sodaExtra', -1)">−</button>
+                <div class="qty-num" id="qty-sodaExtra">1</div>
+                <button class="qty-btn" onclick="changeQty('sodaExtra', 1)">+</button>
+              </div>
+              <div></div>
+              <button class="add-btn secondary" onclick="addExtra('sodaExtra')">Agregar</button>
+            </div>
+          </article>
+        </div>
+
+        <p class="section-sub">Si quieren, pueden dejar estos datos. Si no, pueden enviar el pedido directo.</p>
+
+        <div class="customer-grid">
+          <div class="field">
+            <label for="customerName">Nombre <span class="muted">(opcional)</span></label>
+            <input id="customerName" type="text" placeholder="Ej. Carlos" />
+          </div>
+          <div class="field">
+            <label for="pickupTime">Hora de recoger <span class="muted">(opcional)</span></label>
+            <input id="pickupTime" type="text" placeholder="Ej. 5:30 PM" />
+          </div>
+        </div>
+
+        <div class="customer-grid" style="margin-top:12px;">
+          <div class="field">
+            <label for="paymentMethod">Forma de pago <span class="muted">(opcional)</span></label>
+            <select id="paymentMethod">
+              <option value="No especificada">No especificada</option>
+              <option value="Efectivo">Efectivo</option>
+              <option value="Cash App">Cash App</option>
+              <option value="Zelle">Zelle</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="phoneClient">Teléfono <span class="muted">(opcional)</span></label>
+            <input id="phoneClient" type="text" placeholder="Opcional" />
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:12px;">
+          <label for="notes">Notas del pedido <span class="muted">(opcional)</span></label>
+          <textarea id="notes" placeholder="Ej. bien doradas, sin apio, etc."></textarea>
+        </div>
+      </section>
     </div>
 
-    <script>
-        // Lista de productos predefinidos
-        const productos = ["Potty", "Caulk Rojo", "Caulk Rosa", "Caulk Azul", "Caulk Clear", "Cinta Tape", "Solo", 
-                           "Plastico Ventanas", "Plastico Piso", "Musket Brown", "Tricorn Black", "Tuxedo", "Beige", 
-                           "Pintura Piso", "Lija 120", "Lija 150", "Lija 180"];
+    <section class="summary" id="summaryBox">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+        <div>
+          <div style="font-size:14px;color:#ccc;">Total</div>
+          <div style="font-size:22px;font-weight:900;color:#f5b942;" id="miniTotal">$0</div>
+        </div>
+        <button class="primary" style="padding:12px 14px;font-size:14px;" onclick="toggleFullCart()">Ver pedido</button>
+      </div>
 
-        // Objeto para almacenar cantidades
-        let carrito = {};
+      <div id="fullCart" style="display:none; margin-top:12px;">
+        <div class="summary-items" id="summaryItems"></div>
+        <div class="totals">
+          <div class="total-row"><span>Subtotal</span><span id="subtotalText">$0</span></div>
+          <div class="total-row grand"><span>Total</span><span id="totalText">$0</span></div>
+        </div>
+        <div class="actions">
+          <button class="primary" onclick="sendWhatsAppOrder()">Enviar por WhatsApp</button>
+          <button class="secondary-btn" onclick="copyOrderText()">Copiar</button>
+        </div>
+        <div class="notice">El mensaje se manda a tu número 2515004300 con sabores desglosados, alitas a preparar y total a pagar.</div>
+      </div>
+    </section>
+  </div>
 
-        // Obtener contenedor de productos
-        const contenedor = document.getElementById("productos-container");
+  <script>
+    const phoneNumber = '12515004300';
+    const flavorsList = ['Mango Habanero', 'Spicy Garlic', 'BBQ', 'Buffalo', 'Parmesano', 'Blazzin'];
 
-        // Generar botones de productos
-        productos.forEach(producto => {
-            let btn = document.createElement("div");
-            btn.className = "producto";
-            btn.textContent = producto;
-            btn.onclick = () => agregarProducto(producto);
-            contenedor.appendChild(btn);
+    const menu = {
+      comboPapas: { name: 'Combo con Papas', price: 20, wings: 6, includes: '1 papas + 1 refresco', requiresFlavorConfig: true },
+      ordenClasica: { name: 'Orden clásica', price: 15, wings: 6, includes: '1 refresco', requiresFlavorConfig: true },
+      alitasIndividuales: { name: 'Alitas individuales', price: 3, requiresFlavorConfig: true },
+      papasExtra: { name: 'Orden de papas', price: 6, wings: 0, includes: 'Extra', requiresFlavorConfig: false },
+      sodaExtra: { name: 'Soda extra', price: 2, wings: 0, includes: 'Extra', requiresFlavorConfig: false }
+    };
+
+    const qtyState = {
+      comboPapas: 1,
+      ordenClasica: 1,
+      papasExtra: 1,
+      sodaExtra: 1
+    };
+
+    let cart = [];
+
+    function formatMoney(value){
+      return '$' + Number(value).toFixed(0);
+    }
+
+    function changeQty(key, delta){
+      qtyState[key] = Math.max(1, qtyState[key] + delta);
+      const el = document.getElementById(`qty-${key}`);
+      if(el) el.textContent = qtyState[key];
+    }
+
+    function createFlavorConfig(wingsCount){
+      const mix = {};
+      flavorsList.forEach(flavor => mix[flavor] = 0);
+      return { mode: 'single', singleFlavor: '', mix, wingsCount };
+    }
+
+    function pulseMiniCart(){
+      const summary = document.getElementById('summaryBox');
+      summary.style.transform = 'scale(1.02)';
+      setTimeout(() => summary.style.transform = 'scale(1)', 180);
+    }
+
+    function addPreset(key){
+      const qty = qtyState[key];
+      if(qty <= 0) return;
+      for(let i=0;i<qty;i++){
+        cart.push({
+          id: Date.now() + Math.random() + i,
+          key,
+          name: menu[key].name,
+          qty: 1,
+          wingsCount: menu[key].wings,
+          unitPrice: menu[key].price,
+          total: menu[key].price,
+          includes: menu[key].includes,
+          flavorConfig: menu[key].requiresFlavorConfig ? createFlavorConfig(menu[key].wings) : null
         });
+      }
+      qtyState[key] = 1;
+      document.getElementById(`qty-${key}`).textContent = '1';
+      renderAll();
+      pulseMiniCart();
+    }
 
-        // Agregar productos al cuadro de texto
-        function agregarProducto(nombre) {
-            if (carrito[nombre]) {
-                carrito[nombre]++;  // Aumenta la cantidad si ya está agregado
-            } else {
-                carrito[nombre] = 1; // Agrega el producto por primera vez
-            }
-            actualizarLista();
+    function addIndividual(){
+      const count = Number(document.getElementById('individualCount').value);
+      cart.push({
+        id: Date.now() + Math.random(),
+        key: 'alitasIndividuales',
+        name: 'Alitas individuales',
+        qty: 1,
+        wingsCount: count,
+        unitPrice: count * 3,
+        total: count * 3,
+        includes: 'Solo alitas',
+        flavorConfig: createFlavorConfig(count)
+      });
+      renderAll();
+      pulseMiniCart();
+    }
+
+    function addExtra(key){
+      const qty = qtyState[key];
+      if(qty <= 0) return;
+      cart.push({
+        id: Date.now() + Math.random(),
+        key,
+        name: menu[key].name,
+        qty,
+        wingsCount: 0,
+        unitPrice: menu[key].price,
+        total: qty * menu[key].price,
+        includes: 'Extra',
+        flavorConfig: null
+      });
+      qtyState[key] = 1;
+      document.getElementById(`qty-${key}`).textContent = '1';
+      renderAll();
+      pulseMiniCart();
+    }
+
+    function removeItem(id){
+      cart = cart.filter(item => item.id !== id);
+      renderAll();
+    }
+
+    function clearCart(){
+      cart = [];
+      renderAll();
+    }
+
+    function updateFlavorMode(id, mode){
+      const item = cart.find(x => x.id === id);
+      if(!item || !item.flavorConfig) return;
+      item.flavorConfig.mode = mode;
+      if(mode === 'single'){
+        flavorsList.forEach(flavor => item.flavorConfig.mix[flavor] = 0);
+      } else {
+        item.flavorConfig.singleFlavor = '';
+      }
+      renderFlavorOrders();
+      renderSummary();
+    }
+
+    function updateSingleFlavor(id, value){
+      const item = cart.find(x => x.id === id);
+      if(!item || !item.flavorConfig) return;
+      item.flavorConfig.singleFlavor = value;
+      renderSummary();
+    }
+
+    function getMixTotal(item){
+      return Object.values(item.flavorConfig.mix).reduce((sum, n) => sum + Number(n), 0);
+    }
+
+    function getRemainingForFlavor(item, currentFlavor){
+      const usedWithoutCurrent = Object.entries(item.flavorConfig.mix)
+        .filter(([flavor]) => flavor !== currentFlavor)
+        .reduce((sum, [,count]) => sum + Number(count), 0);
+      return Math.max(0, item.wingsCount - usedWithoutCurrent);
+    }
+
+    function updateMixFlavor(id, flavor, value){
+      const item = cart.find(x => x.id === id);
+      if(!item || !item.flavorConfig) return;
+      const allowedMax = getRemainingForFlavor(item, flavor);
+      item.flavorConfig.mix[flavor] = Math.min(Number(value), allowedMax);
+      renderFlavorOrders();
+      renderSummary();
+    }
+
+    function getFlavorDescription(item){
+      if(!item.flavorConfig) return 'Sin sabores';
+      if(item.flavorConfig.mode === 'single'){
+        return item.flavorConfig.singleFlavor ? `Un sabor: ${item.flavorConfig.singleFlavor}` : 'Un sabor: pendiente de elegir';
+      }
+      const selected = Object.entries(item.flavorConfig.mix).filter(([,count]) => Number(count) > 0);
+      if(!selected.length) return 'Mixteadas: pendiente de elegir';
+      return 'Mixteadas: ' + selected.map(([flavor,count]) => `${count} ${flavor}`).join(', ');
+    }
+
+    function validateFlavorConfig(item){
+      if(!item.flavorConfig) return true;
+      if(item.flavorConfig.mode === 'single'){
+        return !!item.flavorConfig.singleFlavor;
+      }
+      return getMixTotal(item) === item.wingsCount;
+    }
+
+    function renderFlavorOrders(){
+      const container = document.getElementById('flavorOrdersContainer');
+      const flavorItems = cart.filter(item => item.flavorConfig);
+
+      if(flavorItems.length === 0){
+        container.innerHTML = '<div class="muted">Todavía no has agregado órdenes con alitas.</div>';
+        return;
+      }
+
+      container.innerHTML = flavorItems.map((item, index) => {
+        const mixTotal = getMixTotal(item);
+        const remaining = item.wingsCount - mixTotal;
+
+        return `
+          <div class="flavor-order-card">
+            <div class="flavor-order-head">
+              <div>
+                <b>${index + 1}. ${item.name}</b>
+                <div class="muted">${item.wingsCount} alitas · ${item.includes} · ${formatMoney(item.total)}</div>
+              </div>
+              <div class="pill">Orden ${index + 1}</div>
+            </div>
+
+            <div class="mode-options">
+              <label class="mode-box">
+                <input type="radio" name="mode-${item.id}" value="single" ${item.flavorConfig.mode === 'single' ? 'checked' : ''} onchange="updateFlavorMode(${item.id}, 'single')">
+                <span>Un sabor para tu orden</span>
+              </label>
+              <label class="mode-box">
+                <input type="radio" name="mode-${item.id}" value="mix" ${item.flavorConfig.mode === 'mix' ? 'checked' : ''} onchange="updateFlavorMode(${item.id}, 'mix')">
+                <span>Mixteadas</span>
+              </label>
+            </div>
+
+            ${item.flavorConfig.mode === 'single' ? `
+              <div class="single-flavor-box">
+                <div class="field">
+                  <label>Selecciona el sabor</label>
+                  <select onchange="updateSingleFlavor(${item.id}, this.value)">
+                    <option value="">Elige un sabor</option>
+                    ${flavorsList.map(flavor => `<option value="${flavor}" ${item.flavorConfig.singleFlavor === flavor ? 'selected' : ''}>${flavor}</option>`).join('')}
+                  </select>
+                </div>
+              </div>
+            ` : `
+              <div class="mix-box">
+                <div class="muted">Selecciona cuántas alitas lleva cada sabor hasta completar ${item.wingsCount}.</div>
+                <div class="mix-grid">
+                  ${flavorsList.map(flavor => {
+                    const maxForThisFlavor = getRemainingForFlavor(item, flavor);
+                    const currentValue = Number(item.flavorConfig.mix[flavor]);
+                    const optionMax = Math.max(maxForThisFlavor, currentValue);
+
+                    return `
+                    <div class="mix-row">
+                      <span>${flavor}</span>
+                      <select onchange="updateMixFlavor(${item.id}, '${flavor.replace(/'/g, "\\'")}', this.value)">
+                        ${Array.from({length: optionMax + 1}, (_,n) => `<option value="${n}" ${currentValue === n ? 'selected' : ''}>${n}</option>`).join('')}
+                      </select>
+                    </div>`;
+                  }).join('')}
+                </div>
+                ${remaining === 0
+                  ? `<div class="helper-good">Listo. Esta orden ya tiene sus ${item.wingsCount} alitas repartidas.</div>`
+                  : `<div class="helper-warn">Te faltan ${remaining} alitas por repartir en sabores.</div>`}
+              </div>
+            `}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleFullCart(){
+      const box = document.getElementById('fullCart');
+      box.style.display = box.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function renderSummary(){
+      const box = document.getElementById('summaryItems');
+
+      if(cart.length === 0){
+        box.innerHTML = '<div class="muted">Aún no hay productos agregados.</div>';
+      } else {
+        box.innerHTML = cart.map((item, index) => `
+          <div class="summary-item">
+            <div class="summary-line">
+              <strong>${index + 1}. ${item.name}${item.qty > 1 ? ` x${item.qty}` : ''}</strong>
+              <strong>${formatMoney(item.total)}</strong>
+            </div>
+            <div class="summary-line">
+              <span class="muted">${item.wingsCount > 0 ? `${item.wingsCount} alitas · ` : ''}${item.includes}</span>
+            </div>
+            <div class="summary-line"><span>${getFlavorDescription(item)}</span></div>
+            <button class="remove-btn" onclick="removeItem(${item.id})">Quitar</button>
+          </div>
+        `).join('');
+      }
+
+      const subtotal = cart.reduce((sum, item) => sum + item.total, 0);
+      document.getElementById('subtotalText').textContent = formatMoney(subtotal);
+      document.getElementById('miniTotal').textContent = formatMoney(subtotal);
+      document.getElementById('totalText').textContent = formatMoney(subtotal);
+
+      const itemCount = cart.length;
+      const btn = document.querySelector('#summaryBox .primary');
+      if(btn) btn.textContent = itemCount > 0 ? `Ver pedido (${itemCount})` : 'Ver pedido';
+    }
+
+    function renderAll(){
+      renderFlavorOrders();
+      renderSummary();
+      updateIndividualPreview();
+    }
+
+    function buildOrderText(){
+      if(cart.length === 0) return '';
+
+      const invalidItem = cart.find(item => !validateFlavorConfig(item));
+      if(invalidItem){
+        alert('Falta completar sabores en una o más órdenes antes de enviar.');
+        return '';
+      }
+
+      const name = document.getElementById('customerName').value.trim();
+      const pickupTime = document.getElementById('pickupTime').value.trim();
+      const paymentMethod = document.getElementById('paymentMethod').value;
+      const phoneClient = document.getElementById('phoneClient').value.trim();
+      const notes = document.getElementById('notes').value.trim();
+      const total = cart.reduce((sum, item) => sum + item.total, 0);
+      const totalWings = cart.reduce((sum, item) => sum + item.wingsCount, 0);
+
+      let text = `🍗 *Nuevo pedido - Canuto's Wings*\n\n`;
+
+      if(name) text += `*Nombre:* ${name}\n`;
+      if(phoneClient) text += `*Teléfono:* ${phoneClient}\n`;
+      if(pickupTime) text += `*Hora de recoger:* ${pickupTime}\n`;
+      if(paymentMethod && paymentMethod !== 'No especificada') text += `*Forma de pago:* ${paymentMethod}\n`;
+      if(name || phoneClient || pickupTime || (paymentMethod && paymentMethod !== 'No especificada')) text += `\n`;
+
+      text += `*Pedido desglosado:*\n`;
+
+      cart.forEach((item, index) => {
+        text += `\n*${index + 1}. ${item.name}* - ${formatMoney(item.total)}\n`;
+
+        if(item.wingsCount > 0){
+          text += `• Alitas: ${item.wingsCount}\n`;
         }
 
-        // Agregar productos personalizados
-        document.getElementById("productoPersonalizado").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                let nombre = this.value.trim();
-                if (nombre) {
-                    agregarProducto(nombre);
-                    this.value = ""; // Limpiar input
-                }
-            }
-        });
+        text += `• Incluye: ${item.includes}\n`;
 
-        // Actualizar cuadro de texto con los productos y cantidades
-        function actualizarLista() {
-            let lista = "<strong>Se requiere:</strong><br>";
-            for (let producto in carrito) {
-                lista += `<span class="cantidad">${carrito[producto]}</span> - ${producto}<br>`;
-            }
-            document.getElementById("listaProductos").innerHTML = lista;
+        if(item.flavorConfig){
+          if(item.flavorConfig.mode === 'single'){
+            text += `• Sabor: ${item.flavorConfig.singleFlavor}\n`;
+          } else {
+            const mixParts = Object.entries(item.flavorConfig.mix)
+              .filter(([,count]) => Number(count) > 0)
+              .map(([flavor,count]) => `${count} ${flavor}`);
+            text += `• Mixteadas: ${mixParts.join(', ')}\n`;
+          }
         }
+      });
 
-        // Función para copiar solo el pedido sin enviarlo a WhatsApp
-        function copiarPedido() {
-            let mensaje = "Se requiere:\n";
-            for (let producto in carrito) {
-                mensaje += `${carrito[producto]} - ${producto}\n`;
-            }
+      text += `\n*Total de alitas a preparar:* ${totalWings}\n`;
+      if(notes) text += `*Notas:* ${notes}\n`;
+      text += `*Total a pagar:* ${formatMoney(total)}\n`;
+      text += `\nGracias 🙌`;
 
-            if (mensaje.trim() === "Se requiere:\n") {
-                alert("Agrega productos antes de copiar.");
-                return;
-            }
+      return text;
+    }
 
-            // Copiar al portapapeles
-            let tempInput = document.createElement("textarea");
-            tempInput.value = mensaje;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand("copy");
-            document.body.removeChild(tempInput);
+    function sendWhatsAppOrder(){
+      const orderText = buildOrderText();
+      if(!orderText) return;
+      const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(orderText)}`;
+      window.open(url, '_blank');
+    }
 
-            alert("Pedido copiado al portapapeles.");
-        }
+    async function copyOrderText(){
+      const orderText = buildOrderText();
+      if(!orderText) return;
+      try{
+        await navigator.clipboard.writeText(orderText);
+        alert('Pedido copiado al portapapeles.');
+      } catch(e){
+        alert('No se pudo copiar automáticamente.');
+      }
+    }
 
-        // Función para copiar y enviar a WhatsApp
-        function copiarYEnviar() {
-            let mensaje = "Se requiere:\n";
-            for (let producto in carrito) {
-                mensaje += `${carrito[producto]} - ${producto}\n`;
-            }
+    function setTodayText(){
+      const now = new Date();
+      const options = { weekday:'long', day:'2-digit', month:'long', year:'numeric' };
+      const text = now.toLocaleDateString('es-US', options);
+      document.getElementById('todayText').textContent = text.charAt(0).toUpperCase() + text.slice(1);
+    }
 
-            if (mensaje.trim() === "Se requiere:\n") {
-                alert("Agrega productos antes de enviar.");
-                return;
-            }
+    function updateIndividualPreview(){
+      const count = Number(document.getElementById('individualCount').value || 1);
+      document.getElementById('individualPricePreview').textContent = `Total: ${formatMoney(count * 3)}`;
+    }
 
-            // Copiar al portapapeles
-            let tempInput = document.createElement("textarea");
-            tempInput.value = mensaje;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand("copy");
-            document.body.removeChild(tempInput);
-
-            // Número de WhatsApp
-            let numeroWhatsApp = "12512562787"; // Número con código de país sin '+'
-
-            // Enviar a WhatsApp
-            let url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
-            window.location.href = url;
-        }
-    </script>
-
+    document.getElementById('individualCount').addEventListener('change', updateIndividualPreview);
+    setTodayText();
+    renderAll();
+  </script>
 </body>
 </html>
