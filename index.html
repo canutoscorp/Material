@@ -3,29 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Canuto's Wings | App de Pedidos</title>
-  <meta name="theme-color" content="#121212" />
+  <title>Canuto's Wings | App Premium</title>
+  <meta name="theme-color" content="#111111" />
   <style>
     :root{
       --bg:#0f0f10;
-      --bg2:#17171b;
       --card:#18181b;
-      --card2:#202024;
+      --card-2:#202024;
       --soft:#2c2c31;
-      --line:rgba(255,255,255,.08);
       --text:#f7f7f8;
       --muted:#b7b7be;
       --gold:#f5b942;
       --green:#25D366;
-      --green2:#17984a;
       --orange:#ff7a00;
-      --orange2:#ff5400;
-      --blue:#3b82f6;
-      --danger:#ff8a8a;
+      --orange-2:#ff5400;
+      --blue:#345dff;
+      --danger:#ff7b7b;
       --shadow:0 12px 30px rgba(0,0,0,.28);
       --shadow-lg:0 24px 60px rgba(0,0,0,.36);
       --radius:22px;
       --radius-lg:30px;
+      --border:1px solid rgba(255,255,255,.06);
     }
 
     *{box-sizing:border-box}
@@ -34,11 +32,26 @@
       margin:0;
       font-family:Arial, Helvetica, sans-serif;
       background:
-        radial-gradient(circle at top right, rgba(245,185,66,.08), transparent 28%),
-        radial-gradient(circle at bottom left, rgba(255,122,0,.08), transparent 22%),
+        radial-gradient(circle at top right, rgba(245,185,66,.10), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(255,122,0,.10), transparent 22%),
         linear-gradient(180deg,#101012 0%, #19191d 100%);
       color:var(--text);
       overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:linear-gradient(120deg, transparent 0%, rgba(255,255,255,.02) 35%, transparent 60%);
+      animation: shimmerBg 10s linear infinite;
+      opacity:.45;
+    }
+
+    @keyframes shimmerBg {
+      0%{transform:translateX(-30%)}
+      100%{transform:translateX(30%)}
     }
 
     .app{
@@ -47,17 +60,32 @@
       padding:14px 10px 120px;
     }
 
+    .fade-up{
+      opacity:0;
+      transform:translateY(16px);
+      animation:fadeUp .6s ease forwards;
+    }
+    .fade-up.delay-1{animation-delay:.08s}
+    .fade-up.delay-2{animation-delay:.16s}
+    .fade-up.delay-3{animation-delay:.24s}
+    .fade-up.delay-4{animation-delay:.32s}
+
+    @keyframes fadeUp{
+      to{opacity:1;transform:translateY(0)}
+    }
+
     .hero{
       position:relative;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.06);
+      border:var(--border);
       border-radius:var(--radius-lg);
+      padding:22px 18px;
       box-shadow:var(--shadow-lg);
+      overflow:hidden;
       background:
         radial-gradient(circle at top right, rgba(245,185,66,.18), transparent 30%),
-        radial-gradient(circle at top left, rgba(255,122,0,.12), transparent 28%),
-        linear-gradient(145deg, #1f1f24, #111216);
-      padding:22px 18px;
+        radial-gradient(circle at top left, rgba(255,122,0,.14), transparent 28%),
+        linear-gradient(145deg, #1c1c20, #111216);
+      isolation:isolate;
     }
 
     .hero::after{
@@ -65,13 +93,29 @@
       position:absolute;
       inset:0;
       background:
-        linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.28)),
+        linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.30)),
         url('https://raw.githubusercontent.com/canutoscorp/Material/main/combo.jpg') center/cover no-repeat;
-      opacity:.12;
-      pointer-events:none;
+      opacity:.16;
+      z-index:-2;
+      transform:scale(1.04);
     }
 
-    .hero > *{position:relative; z-index:1;}
+    .hero-glow{
+      position:absolute;
+      width:280px;
+      height:280px;
+      right:-40px;
+      top:-50px;
+      background:radial-gradient(circle, rgba(245,185,66,.22), transparent 65%);
+      filter:blur(18px);
+      z-index:-1;
+      animation:floatGlow 5s ease-in-out infinite;
+    }
+
+    @keyframes floatGlow{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(12px)}
+    }
 
     .badge{
       display:inline-block;
@@ -84,12 +128,13 @@
       border-radius:999px;
       letter-spacing:.3px;
       margin-bottom:10px;
+      box-shadow:0 0 0 1px rgba(255,255,255,.03) inset;
     }
 
     h1{
       margin:0;
-      font-size:30px;
-      line-height:1.05;
+      font-size:29px;
+      line-height:1.08;
       letter-spacing:.2px;
     }
 
@@ -103,67 +148,82 @@
 
     .hero-grid{
       display:grid;
-      grid-template-columns:1fr 1fr;
+      grid-template-columns: 1.1fr .9fr;
       gap:14px;
-      align-items:stretch;
+      align-items:center;
       margin-top:16px;
     }
 
-    .hero-stack{display:grid; gap:14px;}
+    .hero-left{
+      display:grid;
+      gap:14px;
+    }
 
     .hero-card{
       background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:20px;
-      padding:14px;
-      backdrop-filter:blur(8px);
-      box-shadow:var(--shadow);
-    }
-
-    .price-highlight{
-      font-size:14px;
-      color:#ffe8aa;
-      margin-top:8px;
-      line-height:1.45;
-    }
-
-    .hero-image{
+      border:var(--border);
       border-radius:22px;
+      padding:14px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(8px);
+    }
+
+    .price-highlight{font-size:14px;color:#ffe8aa;margin-top:8px;line-height:1.45;}
+
+    .hero-image-card{
+      position:relative;
+      border-radius:24px;
       overflow:hidden;
-      border:1px solid rgba(255,255,255,.08);
-      background:#111;
+      border:var(--border);
+      background:linear-gradient(180deg, #16161a, #101114);
       min-height:260px;
       box-shadow:var(--shadow-lg);
-      position:relative;
     }
 
-    .hero-image img{
+    .hero-image-card img{
       width:100%;
       height:100%;
       object-fit:cover;
       display:block;
+      transform:scale(1.02);
+      animation:floatImage 5s ease-in-out infinite;
     }
 
-    .hero-image .hero-chip{
+    .hero-image-card::after{
+      content:"";
       position:absolute;
-      right:12px;
-      bottom:12px;
+      inset:0;
+      background:linear-gradient(180deg, transparent 35%, rgba(0,0,0,.25) 100%);
+      pointer-events:none;
+    }
+
+    @keyframes floatImage{
+      0%,100%{transform:scale(1.02) translateY(0)}
+      50%{transform:scale(1.03) translateY(-6px)}
+    }
+
+    .hero-badge-price{
+      position:absolute;
+      right:14px;
+      bottom:14px;
       background:rgba(0,0,0,.72);
-      border:1px solid rgba(255,255,255,.1);
-      border-radius:14px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
       padding:10px 12px;
+      color:#fff;
       font-weight:800;
-      backdrop-filter:blur(8px);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
     }
 
     .stack{display:grid;gap:14px;margin-top:16px;}
-    .section-title{margin:8px 2px 2px;font-size:21px;font-weight:800;}
+    .section-title{margin:8px 2px 2px;font-size:20px;font-weight:800;}
     .section-sub{color:var(--muted);margin:0 2px 8px;font-size:14px;line-height:1.5;}
     .products,.flavor-orders{display:grid;gap:14px;}
 
     .card{
-      background:linear-gradient(180deg, var(--card), var(--card2));
-      border:1px solid rgba(255,255,255,.05);
+      background:linear-gradient(180deg, var(--card), var(--card-2));
+      border:var(--border);
       border-radius:var(--radius);
       padding:16px;
       box-shadow:var(--shadow);
@@ -179,7 +239,6 @@
       pointer-events:none;
     }
 
-    .product-card{position:relative;}
     .product-top,.summary-line,.mix-row{
       display:flex;
       justify-content:space-between;
@@ -198,7 +257,13 @@
       text-shadow:0 0 18px rgba(245,185,66,.12);
     }
 
-    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:12px;
+    }
+
     .chip{
       background:#2a2a30;
       color:#ececf0;
@@ -210,76 +275,27 @@
 
     .product-media{
       margin-top:14px;
-      border-radius:18px;
+      border-radius:16px;
       overflow:hidden;
       border:1px solid rgba(255,255,255,.06);
       background:#111;
+      max-height:220px;
       position:relative;
-      min-height:170px;
     }
 
     .product-media img{
       width:100%;
-      height:170px;
+      height:100%;
       object-fit:cover;
       display:block;
-      transition:transform .25s ease;
+      transition:transform .28s ease;
+      user-select:none;
+      -webkit-user-drag:none;
     }
 
-    .product-card:hover .product-media img{
+    .card:hover .product-media img{
       transform:scale(1.03);
     }
-
-    .media-label{
-      position:absolute;
-      left:12px;
-      bottom:12px;
-      right:12px;
-      background:rgba(0,0,0,.64);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:14px;
-      padding:10px 12px;
-      font-size:13px;
-      line-height:1.35;
-      backdrop-filter:blur(6px);
-    }
-
-    .flavor-visual{
-      display:grid;
-      grid-template-columns:repeat(6,1fr);
-      gap:8px;
-      padding:14px;
-      min-height:170px;
-      align-items:end;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)),
-        radial-gradient(circle at top right, rgba(245,185,66,.12), transparent 32%),
-        #111216;
-    }
-
-    .wing-mini{
-      height:110px;
-      border-radius:18px 18px 14px 14px;
-      position:relative;
-      box-shadow:inset 0 -10px 16px rgba(0,0,0,.18), 0 10px 20px rgba(0,0,0,.18);
-      border:1px solid rgba(255,255,255,.08);
-    }
-
-    .wing-mini::after{
-      content:"";
-      position:absolute;
-      inset:8px;
-      border-radius:14px;
-      background:linear-gradient(180deg, rgba(255,255,255,.18), transparent 45%);
-      opacity:.5;
-    }
-
-    .wing-1{background:linear-gradient(180deg,#ff9d2b,#dc5b00);}
-    .wing-2{background:linear-gradient(180deg,#b03d1c,#7c180b);}
-    .wing-3{background:linear-gradient(180deg,#83522d,#4b2d17);}
-    .wing-4{background:linear-gradient(180deg,#d27a2d,#8b3f15);}
-    .wing-5{background:linear-gradient(180deg,#e3d8ba,#b99e6d);}
-    .wing-6{background:linear-gradient(180deg,#c01f15,#5e0906);}
 
     .controls{
       display:grid;
@@ -294,7 +310,7 @@
       align-items:center;
       gap:10px;
       background:#111;
-      border:1px solid var(--line);
+      border:1px solid rgba(255,255,255,.08);
       border-radius:14px;
       padding:6px;
       width:fit-content;
@@ -309,51 +325,45 @@
     button:active{transform:scale(.98)}
 
     .qty-btn{
-      width:36px;height:36px;border-radius:10px;background:var(--soft);color:white;font-size:20px;
+      width:36px;height:36px;border-radius:10px;
+      background:var(--soft);color:white;font-size:20px;
     }
+
     .qty-num{width:30px;text-align:center;font-size:18px;font-weight:800;}
 
     .add-btn{
-      background:linear-gradient(135deg, var(--orange), var(--orange2));
+      background:linear-gradient(135deg, var(--orange), var(--orange-2));
       color:white;padding:13px 14px;border-radius:14px;font-size:15px;min-width:140px;
       box-shadow:0 10px 24px rgba(255,122,0,.18);
     }
+
     .add-btn.secondary{
-      background:linear-gradient(135deg, var(--blue), #1d4ed8);
-      box-shadow:0 10px 24px rgba(59,130,246,.16);
+      background:linear-gradient(135deg, var(--blue), #1e42cb);
+      box-shadow:0 10px 24px rgba(52,93,255,.18);
+    }
+
+    .add-btn:hover,.primary:hover,.secondary-btn:hover{
+      transform:translateY(-1px);
     }
 
     .muted{color:var(--muted);font-size:13px;}
+
     .field{display:grid;gap:7px;}
     .field label{font-size:13px;color:#ddd;font-weight:700;}
     .field input,.field textarea,.field select{
       width:100%;
-      background:#111216;color:#fff;border:1px solid var(--line);
+      background:#111216;color:#fff;
+      border:1px solid rgba(255,255,255,.08);
       border-radius:14px;padding:13px 14px;font-size:15px;outline:none;
     }
+
     .field input:focus,.field textarea:focus,.field select:focus{
       border-color:rgba(245,185,66,.45);
-      box-shadow:0 0 0 3px rgba(245,185,66,.1);
+      box-shadow:0 0 0 3px rgba(245,185,66,.10);
     }
+
     .field textarea{min-height:90px;resize:vertical}
     .customer-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-
-    .sparkle-layer{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:2;}
-    .sparkle{
-      position:absolute;width:10px;height:10px;border-radius:50%;
-      background:radial-gradient(circle, rgba(255,215,120,1) 0%, rgba(255,170,40,.95) 45%, rgba(255,170,40,0) 70%);
-      filter:drop-shadow(0 0 8px rgba(255,196,0,.6));
-      animation:sparkleFall .9s ease-out forwards;
-    }
-    .sparkle.star{
-      clip-path:polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-      border-radius:0;
-    }
-    @keyframes sparkleFall{
-      0%{transform:translateY(0) scale(.5);opacity:0;}
-      20%{opacity:1;}
-      100%{transform:translateY(-30px) scale(1.35);opacity:0;}
-    }
 
     .summary{
       position:sticky;
@@ -368,72 +378,116 @@
       box-shadow:var(--shadow-lg);
       transition:transform .18s ease;
     }
+
+    .summary.bump{
+      animation:cartBump .45s ease;
+    }
+
+    @keyframes cartBump{
+      0%{transform:scale(1)}
+      30%{transform:scale(1.06)}
+      60%{transform:scale(.98)}
+      100%{transform:scale(1)}
+    }
+
     .summary-items{display:grid;gap:8px;margin:10px 0 12px;max-height:260px;overflow:auto;}
     .summary-item{
-      background:#16171b;border:1px solid rgba(255,255,255,.05);
-      border-radius:16px;padding:10px 12px;display:grid;gap:6px;
+      background:#16171b;
+      border:1px solid rgba(255,255,255,.05);
+      border-radius:16px;
+      padding:10px 12px;
+      display:grid;
+      gap:6px;
     }
-    .remove-btn{background:none;color:var(--danger);padding:0;font-size:13px;text-align:left;}
+
+    .remove-btn{
+      background:none;
+      color:var(--danger);
+      padding:0;
+      font-size:13px;
+      text-align:left;
+    }
+
     .totals{
       display:grid;gap:6px;border-top:1px solid rgba(255,255,255,.08);
       padding-top:10px;margin-top:6px;
     }
+
     .total-row{display:flex;justify-content:space-between;gap:12px;font-size:14px;}
     .grand{font-size:22px;font-weight:900;color:var(--gold);}
     .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
+
     .primary{
-      background:linear-gradient(135deg, var(--green), var(--green2));
+      background:linear-gradient(135deg, var(--green), #17984a);
       color:#fff;padding:15px;border-radius:16px;font-size:16px;
       box-shadow:0 12px 28px rgba(37,211,102,.18);
     }
-    .secondary-btn{background:#292a2f;color:#fff;padding:15px;border-radius:16px;font-size:15px;}
 
-    .toast{
-      position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);
-      background:rgba(0,0,0,.88);color:#fff;padding:12px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.08);
-      box-shadow:0 12px 30px rgba(0,0,0,.35);font-size:14px;line-height:1.35;z-index:120;
-      opacity:0;pointer-events:none;transition:.25s ease;max-width:min(92vw,420px);text-align:center;
-    }
-    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-    .toast b{color:#ffd57d;}
-
-    .fly-clone{
-      position:fixed;z-index:999;pointer-events:none;border-radius:18px;overflow:hidden;
-      box-shadow:0 18px 40px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.12);
-      animation:flyToCart .85s cubic-bezier(.2,.8,.2,1) forwards;
-    }
-    .fly-clone img{width:100%;height:100%;object-fit:cover;display:block;}
-    @keyframes flyToCart{
-      0%{opacity:1;transform:translate(0,0) scale(1) rotate(0deg);}
-      70%{opacity:1;}
-      100%{opacity:0;transform:var(--fly-transform) scale(.18) rotate(8deg);}
+    .secondary-btn{
+      background:#292a2f;color:#fff;padding:15px;border-radius:16px;font-size:15px;
     }
 
     .flavor-order-card{
-      background:#141418;border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:14px;
+      background:#141418;border:1px solid rgba(255,255,255,.06);
+      border-radius:18px;padding:14px;
     }
+
     .flavor-order-head{
       display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px;
     }
+
     .pill{
-      background:#26262d;border:1px solid rgba(255,255,255,.06);border-radius:999px;padding:6px 10px;font-size:12px;
+      background:#26262d;border:1px solid rgba(255,255,255,.06);
+      border-radius:999px;padding:6px 10px;font-size:12px;
     }
+
     .mode-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0;}
+
     .mode-box{
       background:#101115;border:1px solid rgba(255,255,255,.08);
       border-radius:14px;padding:12px;display:flex;gap:10px;align-items:center;
     }
+
     .single-flavor-box,.mix-box{
-      margin-top:10px;padding:12px;background:#111216;border:1px solid rgba(255,255,255,.08);border-radius:14px;
+      margin-top:10px;padding:12px;background:#111216;
+      border:1px solid rgba(255,255,255,.08);border-radius:14px;
     }
+
     .mix-grid{display:grid;gap:10px;margin-top:10px;}
+
     .mix-row{
-      align-items:center;background:#17181d;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.06);
+      align-items:center;background:#17181d;padding:10px 12px;
+      border-radius:12px;border:1px solid rgba(255,255,255,.06);
     }
-    .mix-row select{max-width:95px;padding:10px 12px;}
+
+    .mix-row select{max-width:110px;padding:10px 12px;}
     .helper-good{font-size:12px;color:#9de3ac;margin-top:10px;}
     .helper-warn{font-size:12px;color:#ffb3b3;margin-top:10px;}
     .mini-total{font-size:13px;color:#ddd;}
+    .notice{margin-top:10px;font-size:12px;color:var(--muted);text-align:center;line-height:1.4;}
+
+    .flying-image{
+      position:fixed;
+      z-index:9999;
+      pointer-events:none;
+      border-radius:14px;
+      overflow:hidden;
+      box-shadow:0 16px 34px rgba(0,0,0,.35);
+      transition:
+        transform .8s cubic-bezier(.2,.8,.2,1),
+        opacity .8s ease,
+        width .8s ease,
+        height .8s ease,
+        left .8s cubic-bezier(.2,.8,.2,1),
+        top .8s cubic-bezier(.2,.8,.2,1);
+    }
+
+    .flying-image img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
 
     @media (max-width:700px){
       .hero-grid,.customer-grid,.actions,.mode-options,.controls{grid-template-columns:1fr;}
@@ -449,25 +503,26 @@
       .section-title{font-size:22px}
       .summary-items{max-height:200px}
       .product-top,.mix-row{flex-direction:column;align-items:stretch;}
-      .hero-image{min-height:220px}
-      .flavor-visual{grid-template-columns:repeat(3,1fr);}
+      .hero-image-card{min-height:220px}
     }
   </style>
 </head>
 <body>
   <div class="app">
-    <section class="hero">
+    <section class="hero fade-up">
+      <div class="hero-glow"></div>
       <div class="badge">PEDIDOS RÁPIDOS POR WHATSAPP</div>
       <h1>Canuto's Wings 🍗</h1>
-      <p class="sub">Arma tu pedido, selecciona sabores por cada orden y envíalo directo por WhatsApp al <b>251 500 4300</b>.</p>
+      <p class="sub">Arma tu pedido, selecciona sabores por cada orden y envíalo directo por WhatsApp al <b>251 500 4300</b>. Compatible con teléfono celular y listo para subir.</p>
 
       <div class="hero-grid">
-        <div class="hero-stack">
+        <div class="hero-left">
           <div class="hero-card">
             <b>🔥 Combo estrella</b>
             <div class="price-highlight">1 orden de alitas + 1 papas + 1 refresco</div>
             <div class="price-highlight"><b>$20</b></div>
           </div>
+
           <div class="hero-card">
             <b>⏰ Horario</b>
             <div class="price-highlight">Sábados desde las 5:00 PM</div>
@@ -475,20 +530,20 @@
           </div>
         </div>
 
-        <div class="hero-image">
-          <img src="https://raw.githubusercontent.com/canutoscorp/Material/main/combo.jpg" alt="Combo de alitas con papas y soda">
-          <div class="hero-chip">Combo favorito · $20</div>
+        <div class="hero-image-card">
+          <img src="https://raw.githubusercontent.com/canutoscorp/Material/main/combo.jpg" alt="Combo de alitas con papas y refresco">
+          <div class="hero-badge-price">Combo favorito · $20</div>
         </div>
       </div>
     </section>
 
     <div class="stack">
-      <section class="card">
+      <section class="card fade-up delay-1">
         <div class="section-title">1. Elige tus productos</div>
-        <p class="section-sub">Primero agregas los productos. Después, abajo, eliges sabores por cada orden.</p>
+        <p class="section-sub">Primero agregas los productos. Después eliges sabores por cada orden que tenga alitas.</p>
 
         <div class="products">
-          <article class="card product-card" data-fly-image="https://raw.githubusercontent.com/canutoscorp/Material/main/combo.jpg" style="margin:0; background:#141418;">
+          <article class="card" style="margin:0; background:#141418;">
             <div class="product-top">
               <div>
                 <h3 class="product-name">Combo con Papas</h3>
@@ -502,8 +557,7 @@
               <span class="chip">1 refresco</span>
             </div>
             <div class="product-media">
-              <img src="https://raw.githubusercontent.com/canutoscorp/Material/main/combo.jpg" alt="Combo con papas y soda">
-              <div class="media-label">El combo estrella de la casa. Ideal para vender más ticket desde la primera vista.</div>
+              <img src="https://raw.githubusercontent.com/canutoscorp/Material/main/combo.jpg" alt="Combo con papas">
             </div>
             <div class="controls">
               <div class="qty-box">
@@ -516,7 +570,7 @@
             </div>
           </article>
 
-          <article class="card product-card" data-fly-image="https://raw.githubusercontent.com/canutoscorp/Material/main/combo.jpg" style="margin:0; background:#141418;">
+          <article class="card" style="margin:0; background:#141418;">
             <div class="product-top">
               <div>
                 <h3 class="product-name">Orden clásica</h3>
@@ -529,8 +583,7 @@
               <span class="chip">1 refresco</span>
             </div>
             <div class="product-media">
-              <img src="https://raw.githubusercontent.com/canutoscorp/Material/main/combo.jpg" alt="Orden clásica">
-              <div class="media-label">Presentación sugerida con ranch, apio y zanahoria para que se vea más completa y antoje más.</div>
+              <img src="https://raw.githubusercontent.com/canutoscorp/Material/main/alitas.jpg" alt="Orden clásica de alitas" onerror="this.src='https://raw.githubusercontent.com/canutoscorp/Material/main/combo.jpg'">
             </div>
             <div class="controls">
               <div class="qty-box">
@@ -543,7 +596,7 @@
             </div>
           </article>
 
-          <article class="card product-card" data-fly-image="https://raw.githubusercontent.com/canutoscorp/Material/main/combo.jpg" style="margin:0; background:#141418;">
+          <article class="card" style="margin:0; background:#141418;">
             <div class="product-top">
               <div>
                 <h3 class="product-name">Alitas individuales</h3>
@@ -555,18 +608,10 @@
               <span class="chip">Precio por pieza</span>
             </div>
             <div class="product-media">
-              <div class="flavor-visual">
-                <div class="wing-mini wing-1" title="Mango Habanero"></div>
-                <div class="wing-mini wing-2" title="Spicy Garlic"></div>
-                <div class="wing-mini wing-3" title="BBQ"></div>
-                <div class="wing-mini wing-4" title="Buffalo"></div>
-                <div class="wing-mini wing-5" title="Parmesano"></div>
-                <div class="wing-mini wing-6" title="Blazzin"></div>
-              </div>
-              <div class="media-label">Visual de 6 alitas mix para que el cliente imagine diferentes sabores en una sola orden.</div>
+              <img src="https://raw.githubusercontent.com/canutoscorp/Material/main/alitas_individuales.jpg" alt="Alitas individuales" onerror="this.src='https://raw.githubusercontent.com/canutoscorp/Material/main/combo.jpg'">
             </div>
             <div class="controls">
-              <div class="field" style="max-width:140px; margin:0;">
+              <div class="field" style="max-width:160px; margin:0;">
                 <label for="individualCount" style="display:none;">Número de alitas</label>
                 <select id="individualCount">
                   <option value="1">1 alita</option>
@@ -587,8 +632,23 @@
               <button class="add-btn" onclick="addIndividual(this)">Agregar</button>
             </div>
           </article>
+        </div>
+      </section>
 
-          <article class="card product-card" data-fly-image="https://raw.githubusercontent.com/canutoscorp/Material/main/papas.jpg" style="margin:0; background:#141418;">
+      <section class="card fade-up delay-2">
+        <div class="section-title">2. Sabores por cada orden agregada</div>
+        <p class="section-sub">Aquí aparecen solo las órdenes que llevan alitas. Si eliges mixteadas, no te dejará pasarte del número de alitas disponible.</p>
+        <div class="flavor-orders" id="flavorOrdersContainer">
+          <div class="muted">Todavía no has agregado órdenes con alitas.</div>
+        </div>
+      </section>
+
+      <section class="card fade-up delay-3">
+        <div class="section-title">3. Extras y datos opcionales</div>
+        <p class="section-sub">Las papas y sodas extra ayudan a subir el ticket. Por ahora los datos del cliente son opcionales.</p>
+
+        <div class="products" style="margin-bottom:14px;">
+          <article class="card" style="margin:0; background:#141418;">
             <div class="product-top">
               <div>
                 <h3 class="product-name">Orden de papas</h3>
@@ -598,7 +658,6 @@
             </div>
             <div class="product-media">
               <img src="https://raw.githubusercontent.com/canutoscorp/Material/main/papas.jpg" alt="Papas a la francesa">
-              <div class="media-label">Extra perfecto para subir el ticket y aprovechar pedidos familiares.</div>
             </div>
             <div class="controls">
               <div class="qty-box">
@@ -611,7 +670,7 @@
             </div>
           </article>
 
-          <article class="card product-card" data-fly-image="https://raw.githubusercontent.com/canutoscorp/Material/main/soda.jpg" style="margin:0; background:#141418;">
+          <article class="card" style="margin:0; background:#141418;">
             <div class="product-top">
               <div>
                 <h3 class="product-name">Soda extra</h3>
@@ -620,8 +679,7 @@
               <div class="price">$2</div>
             </div>
             <div class="product-media">
-              <img src="https://raw.githubusercontent.com/canutoscorp/Material/main/soda.jpg" alt="Soda extra">
-              <div class="media-label">Agrega una soda más sin complicar el pedido.</div>
+              <img src="https://raw.githubusercontent.com/canutoscorp/Material/main/soda.jpg" alt="Refresco frío">
             </div>
             <div class="controls">
               <div class="qty-box">
@@ -634,33 +692,25 @@
             </div>
           </article>
         </div>
-      </section>
 
-      <section class="card">
-        <div class="section-title">2. Sabores por cada orden agregada</div>
-        <p class="section-sub">Si eliges mixteadas, no te dejará pasarte del número de alitas disponible.</p>
-        <div class="flavor-orders" id="flavorOrdersContainer">
-          <div class="muted">Todavía no has agregado órdenes con alitas.</div>
-        </div>
-      </section>
+        <p class="section-sub">Si quieren, pueden dejar estos datos. Si no, pueden enviar el pedido directo.</p>
 
-      <section class="card">
-        <div class="section-title">3. Datos del cliente</div>
-        <p class="section-sub">Puedes mandarlo con nombre, hora y forma de pago para que te llegue más ordenado por WhatsApp.</p>
         <div class="customer-grid">
           <div class="field">
-            <label for="customerName">Nombre</label>
+            <label for="customerName">Nombre <span class="muted">(opcional)</span></label>
             <input id="customerName" type="text" placeholder="Ej. Carlos" />
           </div>
           <div class="field">
-            <label for="pickupTime">Hora de recoger</label>
+            <label for="pickupTime">Hora de recoger <span class="muted">(opcional)</span></label>
             <input id="pickupTime" type="text" placeholder="Ej. 5:30 PM" />
           </div>
         </div>
+
         <div class="customer-grid" style="margin-top:12px;">
           <div class="field">
-            <label for="paymentMethod">Forma de pago</label>
+            <label for="paymentMethod">Forma de pago <span class="muted">(opcional)</span></label>
             <select id="paymentMethod">
+              <option value="No especificada">No especificada</option>
               <option value="Efectivo">Efectivo</option>
               <option value="Cash App">Cash App</option>
               <option value="Zelle">Zelle</option>
@@ -668,25 +718,25 @@
             </select>
           </div>
           <div class="field">
-            <label for="phoneClient">Teléfono del cliente</label>
+            <label for="phoneClient">Teléfono <span class="muted">(opcional)</span></label>
             <input id="phoneClient" type="text" placeholder="Opcional" />
           </div>
         </div>
+
         <div class="field" style="margin-top:12px;">
-          <label for="notes">Notas del pedido</label>
+          <label for="notes">Notas del pedido <span class="muted">(opcional)</span></label>
           <textarea id="notes" placeholder="Ej. bien doradas, sin apio, etc."></textarea>
         </div>
       </section>
     </div>
 
-    <section class="summary" id="summaryBox" style="padding:10px; position:relative; overflow:hidden;">
-      <div class="sparkle-layer" id="sparkleLayer"></div>
+    <section class="summary fade-up delay-4" id="summaryBox">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
         <div>
           <div style="font-size:14px;color:#ccc;">Total</div>
           <div style="font-size:22px;font-weight:900;color:#f5b942;" id="miniTotal">$0</div>
         </div>
-        <button class="primary" id="cartToggleBtn" style="padding:12px 14px;font-size:14px;" onclick="toggleFullCart()">Ver pedido (0)</button>
+        <button class="primary" id="toggleCartBtn" style="padding:12px 14px;font-size:14px;" onclick="toggleFullCart()">Ver pedido</button>
       </div>
 
       <div id="fullCart" style="display:none; margin-top:12px;">
@@ -699,6 +749,7 @@
           <button class="primary" onclick="sendWhatsAppOrder()">Enviar por WhatsApp</button>
           <button class="secondary-btn" onclick="copyOrderText()">Copiar</button>
         </div>
+        <div class="notice">El mensaje se manda a tu número 2515004300 con sabores desglosados, alitas a preparar y total a pagar.</div>
       </div>
     </section>
   </div>
@@ -723,7 +774,6 @@
     };
 
     let cart = [];
-    let audioCtx = null;
 
     function formatMoney(value){
       return '$' + Number(value).toFixed(0);
@@ -741,9 +791,59 @@
       return { mode: 'single', singleFlavor: '', mix, wingsCount };
     }
 
-    function addPreset(key, btn){
+    function pulseMiniCart(){
+      const summary = document.getElementById('summaryBox');
+      summary.classList.remove('bump');
+      void summary.offsetWidth;
+      summary.classList.add('bump');
+      setTimeout(() => summary.classList.remove('bump'), 500);
+    }
+
+    function animateToCart(buttonEl){
+      try{
+        const media = buttonEl.closest('.card').querySelector('.product-media img');
+        const cartEl = document.getElementById('summaryBox');
+        if(!media || !cartEl) return;
+
+        const imgRect = media.getBoundingClientRect();
+        const cartRect = cartEl.getBoundingClientRect();
+
+        const flyer = document.createElement('div');
+        flyer.className = 'flying-image';
+        flyer.style.left = imgRect.left + 'px';
+        flyer.style.top = imgRect.top + 'px';
+        flyer.style.width = imgRect.width + 'px';
+        flyer.style.height = imgRect.height + 'px';
+        flyer.style.opacity = '1';
+
+        const img = document.createElement('img');
+        img.src = media.src;
+        img.alt = media.alt || 'producto';
+        flyer.appendChild(img);
+        document.body.appendChild(flyer);
+
+        requestAnimationFrame(() => {
+          flyer.style.left = (cartRect.left + cartRect.width / 2 - 40) + 'px';
+          flyer.style.top = (cartRect.top + 10) + 'px';
+          flyer.style.width = '80px';
+          flyer.style.height = '60px';
+          flyer.style.opacity = '.15';
+          flyer.style.transform = 'scale(.4) rotate(10deg)';
+        });
+
+        setTimeout(() => {
+          flyer.remove();
+          pulseMiniCart();
+        }, 820);
+      } catch(e){
+        pulseMiniCart();
+      }
+    }
+
+    function addPreset(key, buttonEl){
       const qty = qtyState[key];
       if(qty <= 0) return;
+
       for(let i=0;i<qty;i++){
         cart.push({
           id: Date.now() + Math.random() + i,
@@ -757,15 +857,14 @@
           flavorConfig: menu[key].requiresFlavorConfig ? createFlavorConfig(menu[key].wings) : null
         });
       }
+
       qtyState[key] = 1;
       document.getElementById(`qty-${key}`).textContent = '1';
       renderAll();
-      pulseMiniCart();
-      flashButton(btn);
-      flyProductToCart(btn);
+      animateToCart(buttonEl);
     }
 
-    function addIndividual(btn){
+    function addIndividual(buttonEl){
       const count = Number(document.getElementById('individualCount').value);
       cart.push({
         id: Date.now() + Math.random(),
@@ -779,12 +878,10 @@
         flavorConfig: createFlavorConfig(count)
       });
       renderAll();
-      pulseMiniCart();
-      flashButton(btn);
-      flyProductToCart(btn);
+      animateToCart(buttonEl);
     }
 
-    function addExtra(key, btn){
+    function addExtra(key, buttonEl){
       const qty = qtyState[key];
       if(qty <= 0) return;
       cart.push({
@@ -795,15 +892,13 @@
         wingsCount: 0,
         unitPrice: menu[key].price,
         total: qty * menu[key].price,
-        includes: menu[key].includes,
+        includes: 'Extra',
         flavorConfig: null
       });
       qtyState[key] = 1;
       document.getElementById(`qty-${key}`).textContent = '1';
       renderAll();
-      pulseMiniCart();
-      flashButton(btn);
-      flyProductToCart(btn);
+      animateToCart(buttonEl);
     }
 
     function removeItem(id){
@@ -831,7 +926,11 @@
       renderSummary();
     }
 
-    function getMaxForFlavor(item, currentFlavor){
+    function getMixTotal(item){
+      return Object.values(item.flavorConfig.mix).reduce((sum, n) => sum + Number(n), 0);
+    }
+
+    function getRemainingForFlavor(item, currentFlavor){
       const usedWithoutCurrent = Object.entries(item.flavorConfig.mix)
         .filter(([flavor]) => flavor !== currentFlavor)
         .reduce((sum, [,count]) => sum + Number(count), 0);
@@ -841,14 +940,10 @@
     function updateMixFlavor(id, flavor, value){
       const item = cart.find(x => x.id === id);
       if(!item || !item.flavorConfig) return;
-      const maxAllowed = getMaxForFlavor(item, flavor);
-      item.flavorConfig.mix[flavor] = Math.min(Number(value), maxAllowed);
+      const allowedMax = getRemainingForFlavor(item, flavor);
+      item.flavorConfig.mix[flavor] = Math.min(Number(value), allowedMax);
       renderFlavorOrders();
       renderSummary();
-    }
-
-    function getMixTotal(item){
-      return Object.values(item.flavorConfig.mix).reduce((sum, n) => sum + Number(n), 0);
     }
 
     function getFlavorDescription(item){
@@ -918,19 +1013,22 @@
                 <div class="muted">Selecciona cuántas alitas lleva cada sabor hasta completar ${item.wingsCount}.</div>
                 <div class="mix-grid">
                   ${flavorsList.map(flavor => {
+                    const maxForThisFlavor = getRemainingForFlavor(item, flavor);
                     const currentValue = Number(item.flavorConfig.mix[flavor]);
-                    const maxForThisFlavor = Math.max(getMaxForFlavor(item, flavor), currentValue);
+                    const optionMax = Math.max(maxForThisFlavor, currentValue);
+
                     return `
-                      <div class="mix-row">
-                        <span>${flavor}</span>
-                        <select onchange="updateMixFlavor(${item.id}, '${flavor.replace(/'/g,"\\'")}', this.value)">
-                          ${Array.from({length: maxForThisFlavor + 1}, (_,n) => `<option value="${n}" ${currentValue === n ? 'selected' : ''}>${n}</option>`).join('')}
-                        </select>
-                      </div>
-                    `;
+                    <div class="mix-row">
+                      <span>${flavor}</span>
+                      <select onchange="updateMixFlavor(${item.id}, '${flavor.replace(/'/g, "\\'")}', this.value)">
+                        ${Array.from({length: optionMax + 1}, (_,n) => `<option value="${n}" ${currentValue === n ? 'selected' : ''}>${n}</option>`).join('')}
+                      </select>
+                    </div>`;
                   }).join('')}
                 </div>
-                ${remaining === 0 ? `<div class="helper-good">Listo. Esta orden ya tiene sus ${item.wingsCount} alitas repartidas.</div>` : `<div class="helper-warn">Te faltan ${remaining} alitas por repartir en sabores.</div>`}
+                ${remaining === 0
+                  ? `<div class="helper-good">Listo. Esta orden ya tiene sus ${item.wingsCount} alitas repartidas.</div>`
+                  : `<div class="helper-warn">Te faltan ${remaining} alitas por repartir en sabores.</div>`}
               </div>
             `}
           </div>
@@ -943,129 +1041,35 @@
       box.style.display = box.style.display === 'none' ? 'block' : 'none';
     }
 
-    function playAddSound(){
-      try{
-        const Ctx = window.AudioContext || window.webkitAudioContext;
-        if(!Ctx) return;
-        if(!audioCtx) audioCtx = new Ctx();
-        const now = audioCtx.currentTime;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(880, now);
-        osc.frequency.exponentialRampToValueAtTime(1320, now + 0.08);
-        gain.gain.setValueAtTime(0.0001, now);
-        gain.gain.exponentialRampToValueAtTime(0.05, now + 0.01);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start(now);
-        osc.stop(now + 0.13);
-      }catch(e){}
-    }
-
-    function pulseMiniCart(){
-      try{ if(navigator.vibrate) navigator.vibrate(35); }catch(e){}
-      playAddSound();
-      const summary = document.getElementById('summaryBox');
-      if(summary){
-        summary.style.transform = 'scale(1.02)';
-        setTimeout(() => summary.style.transform = 'scale(1)', 180);
-      }
-      launchSparkles();
-      showToast();
-    }
-
-    function showToast(){
-      const toast = document.getElementById('toastMsg');
-      if(!toast) return;
-      toast.classList.add('show');
-      clearTimeout(window.__toastTimer);
-      window.__toastTimer = setTimeout(() => toast.classList.remove('show'), 1900);
-    }
-
-    function flashButton(btn){
-      if(!btn) return;
-      const original = btn.textContent;
-      btn.textContent = 'Agregado ✓';
-      btn.style.background = 'linear-gradient(135deg, #25D366, #17984a)';
-      btn.style.boxShadow = '0 10px 24px rgba(37,211,102,.25)';
-      btn.disabled = true;
-      setTimeout(() => {
-        btn.textContent = original;
-        btn.style.background = '';
-        btn.style.boxShadow = '';
-        btn.disabled = false;
-      }, 1200);
-    }
-
-    function flyProductToCart(btn){
-      if(!btn) return;
-      const card = btn.closest('.product-card') || btn.closest('.card');
-      const summary = document.getElementById('summaryBox');
-      if(!card || !summary) return;
-      const imgUrl = card.dataset.flyImage || '';
-      const start = card.getBoundingClientRect();
-      const end = summary.getBoundingClientRect();
-      const clone = document.createElement('div');
-      clone.className = 'fly-clone';
-      clone.style.left = start.left + 'px';
-      clone.style.top = start.top + 'px';
-      clone.style.width = start.width + 'px';
-      clone.style.height = Math.min(start.height, 180) + 'px';
-      const dx = (end.left + end.width/2) - (start.left + start.width/2);
-      const dy = (end.top + end.height/2) - (start.top + Math.min(start.height, 180)/2);
-      clone.style.setProperty('--fly-transform', `translate(${dx}px, ${dy}px)`);
-      if(imgUrl){
-        const img = document.createElement('img');
-        img.src = imgUrl;
-        img.alt = 'Producto agregado';
-        clone.appendChild(img);
-      } else {
-        clone.style.background = 'linear-gradient(135deg, rgba(255,122,0,.95), rgba(245,185,66,.95))';
-      }
-      document.body.appendChild(clone);
-      setTimeout(() => clone.remove(), 900);
-    }
-
-    function launchSparkles(){
-      const layer = document.getElementById('sparkleLayer');
-      if(!layer) return;
-      const total = 14;
-      for(let i=0;i<total;i++){
-        const s = document.createElement('span');
-        s.className = 'sparkle' + (i % 3 === 0 ? ' star' : '');
-        s.style.left = (8 + Math.random() * 84) + '%';
-        s.style.bottom = (8 + Math.random() * 18) + 'px';
-        s.style.animationDelay = (Math.random() * 0.18) + 's';
-        const size = 8 + Math.random() * 8;
-        s.style.width = size + 'px';
-        s.style.height = size + 'px';
-        layer.appendChild(s);
-        setTimeout(() => s.remove(), 1100);
-      }
-    }
-
     function renderSummary(){
       const box = document.getElementById('summaryItems');
+
       if(cart.length === 0){
         box.innerHTML = '<div class="muted">Aún no hay productos agregados.</div>';
       } else {
         box.innerHTML = cart.map((item, index) => `
           <div class="summary-item">
-            <div class="summary-line"><strong>${index + 1}. ${item.name}${item.qty > 1 ? ` x${item.qty}` : ''}</strong><strong>${formatMoney(item.total)}</strong></div>
-            <div class="summary-line"><span class="muted">${item.wingsCount > 0 ? `${item.wingsCount} alitas · ` : ''}${item.includes}</span></div>
+            <div class="summary-line">
+              <strong>${index + 1}. ${item.name}${item.qty > 1 ? ` x${item.qty}` : ''}</strong>
+              <strong>${formatMoney(item.total)}</strong>
+            </div>
+            <div class="summary-line">
+              <span class="muted">${item.wingsCount > 0 ? `${item.wingsCount} alitas · ` : ''}${item.includes}</span>
+            </div>
             <div class="summary-line"><span>${getFlavorDescription(item)}</span></div>
             <button class="remove-btn" onclick="removeItem(${item.id})">Quitar</button>
           </div>
         `).join('');
       }
+
       const subtotal = cart.reduce((sum, item) => sum + item.total, 0);
       document.getElementById('subtotalText').textContent = formatMoney(subtotal);
       document.getElementById('miniTotal').textContent = formatMoney(subtotal);
       document.getElementById('totalText').textContent = formatMoney(subtotal);
-      const btn = document.getElementById('cartToggleBtn');
-      if(btn) btn.textContent = `Ver pedido (${cart.length})`;
+
+      const itemCount = cart.length;
+      const btn = document.getElementById('toggleCartBtn');
+      if(btn) btn.textContent = itemCount > 0 ? `Ver pedido (${itemCount})` : 'Ver pedido';
     }
 
     function renderAll(){
@@ -1076,6 +1080,7 @@
 
     function buildOrderText(){
       if(cart.length === 0) return '';
+
       const invalidItem = cart.find(item => !validateFlavorConfig(item));
       if(invalidItem){
         alert('Falta completar sabores en una o más órdenes antes de enviar.');
@@ -1084,28 +1089,35 @@
 
       const name = document.getElementById('customerName').value.trim();
       const pickupTime = document.getElementById('pickupTime').value.trim();
-      const paymentMethod = document.getElementById('paymentMethod').value.trim();
+      const paymentMethod = document.getElementById('paymentMethod').value;
       const phoneClient = document.getElementById('phoneClient').value.trim();
       const notes = document.getElementById('notes').value.trim();
       const total = cart.reduce((sum, item) => sum + item.total, 0);
       const totalWings = cart.reduce((sum, item) => sum + item.wingsCount, 0);
 
       const lines = [];
-      lines.push("🍗 *CANUTO'S WINGS*");
+      lines.push("🍗 *Nuevo pedido - Canuto's Wings*");
       lines.push("");
 
-      if(name) lines.push(`Cliente: ${name}`);
-      if(phoneClient) lines.push(`Teléfono: ${phoneClient}`);
-      if(pickupTime) lines.push(`Hora: ${pickupTime}`);
-      if(paymentMethod) lines.push(`Pago: ${paymentMethod}`);
+      if(name) lines.push(`*Nombre:* ${name}`);
+      if(phoneClient) lines.push(`*Teléfono:* ${phoneClient}`);
+      if(pickupTime) lines.push(`*Hora de recoger:* ${pickupTime}`);
+      if(paymentMethod && paymentMethod !== 'No especificada') lines.push(`*Forma de pago:* ${paymentMethod}`);
 
-      if(name || phoneClient || pickupTime || paymentMethod) lines.push("");
-      lines.push("──────────────");
-      lines.push("");
+      if(name || phoneClient || pickupTime || (paymentMethod && paymentMethod !== 'No especificada')) {
+        lines.push("");
+      }
+
+      lines.push("*Pedido desglosado:*");
 
       cart.forEach((item, index) => {
-        lines.push(`${index + 1}. ${item.name}  ${formatMoney(item.total)}`);
-        if(item.wingsCount > 0) lines.push(`• Alitas: ${item.wingsCount}`);
+        lines.push("");
+        lines.push(`*${index + 1}. ${item.name}* - ${formatMoney(item.total)}`);
+
+        if(item.wingsCount > 0){
+          lines.push(`• Alitas: ${item.wingsCount}`);
+        }
+
         lines.push(`• Incluye: ${item.includes}`);
 
         if(item.flavorConfig){
@@ -1115,24 +1127,19 @@
             const mixParts = Object.entries(item.flavorConfig.mix)
               .filter(([,count]) => Number(count) > 0)
               .map(([flavor,count]) => `${count} ${flavor}`);
-            lines.push(`• Mix: ${mixParts.join(', ')}`);
+            lines.push(`• Mixteadas: ${mixParts.join(', ')}`);
           }
         }
-
-        if(index !== cart.length - 1) lines.push("");
       });
 
       lines.push("");
-      lines.push("──────────────");
-      lines.push(`Total alitas: ${totalWings}`);
-      lines.push(`TOTAL: ${formatMoney(total)}`);
-
-      if(notes) lines.push(`Notas: ${notes}`);
-
+      lines.push(`*Total de alitas a preparar:* ${totalWings}`);
+      if(notes) lines.push(`*Notas:* ${notes}`);
+      lines.push(`*Total a pagar:* ${formatMoney(total)}`);
       lines.push("");
       lines.push("Gracias 🙌");
 
-      return lines.join("\\n");
+      return lines.join('\n');
     }
 
     function sendWhatsAppOrder(){
@@ -1148,7 +1155,7 @@
       try{
         await navigator.clipboard.writeText(orderText);
         alert('Pedido copiado al portapapeles.');
-      }catch(e){
+      } catch(e){
         alert('No se pudo copiar automáticamente.');
       }
     }
@@ -1169,7 +1176,5 @@
     setTodayText();
     renderAll();
   </script>
-
-  <div class="toast" id="toastMsg"><b>Producto agregado</b><br>Selecciona tu sabor o sabores abajo.</div>
 </body>
 </html>
