@@ -489,6 +489,41 @@
       display:block;
     }
 
+    .cart-plus-one{
+      position:fixed;
+      z-index:10000;
+      pointer-events:none;
+      font-weight:900;
+      font-size:30px;
+      color:#ffd95f;
+      text-shadow:
+        0 0 6px rgba(255,217,95,.9),
+        0 0 18px rgba(255,185,66,.75),
+        0 0 30px rgba(255,122,0,.55);
+      opacity:0;
+      transform:translateY(0) scale(.7);
+      animation:plusOneFly .9s ease forwards;
+    }
+
+    @keyframes plusOneFly{
+      0%{
+        opacity:0;
+        transform:translateY(12px) scale(.7);
+      }
+      20%{
+        opacity:1;
+        transform:translateY(0) scale(1.15);
+      }
+      70%{
+        opacity:1;
+        transform:translateY(-26px) scale(1);
+      }
+      100%{
+        opacity:0;
+        transform:translateY(-44px) scale(.9);
+      }
+    }
+
     @media (max-width:700px){
       .hero-grid,.customer-grid,.actions,.mode-options,.controls{grid-template-columns:1fr;}
       .price{text-align:left;min-width:auto;font-size:26px;}
@@ -799,11 +834,33 @@
       setTimeout(() => summary.classList.remove('bump'), 500);
     }
 
+    function showPlusOne(){
+      const cartEl = document.getElementById('summaryBox');
+      if(!cartEl) return;
+
+      const rect = cartEl.getBoundingClientRect();
+      const plus = document.createElement('div');
+      plus.className = 'cart-plus-one';
+      plus.textContent = '+1';
+      plus.style.left = (rect.left + rect.width - 60) + 'px';
+      plus.style.top = (rect.top - 8) + 'px';
+
+      document.body.appendChild(plus);
+
+      setTimeout(() => {
+        plus.remove();
+      }, 950);
+    }
+
     function animateToCart(buttonEl){
       try{
         const media = buttonEl.closest('.card').querySelector('.product-media img');
         const cartEl = document.getElementById('summaryBox');
-        if(!media || !cartEl) return;
+        if(!media || !cartEl) {
+          pulseMiniCart();
+          showPlusOne();
+          return;
+        }
 
         const imgRect = media.getBoundingClientRect();
         const cartRect = cartEl.getBoundingClientRect();
@@ -834,9 +891,11 @@
         setTimeout(() => {
           flyer.remove();
           pulseMiniCart();
+          showPlusOne();
         }, 820);
       } catch(e){
         pulseMiniCart();
+        showPlusOne();
       }
     }
 
